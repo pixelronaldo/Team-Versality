@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCTiers Asia - Player Rankings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            color: #fff;
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0 30px;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            color: #ffcc00;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #aaa;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+        
+        .asia-badge {
+            display: inline-block;
+            background: #c62828;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            margin-top: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tiers-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .tier-card {
+            background: rgba(30, 30, 40, 0.85);
+            border-radius: 15px;
+            padding: 25px;
+            width: 320px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tier-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+        }
+        
+        .tier-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tier-icon {
+            font-size: 2.5rem;
+            margin-right: 15px;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .tier-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .tier-description {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-top: 5px;
+        }
+        
+        .player-list {
+            list-style-type: none;
+        }
+        
+        .player-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            transition: background 0.3s;
+        }
+        
+        .player-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .player-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ffcc00, #ff9900);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            color: #000;
+        }
+        
+        .player-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .player-tier {
+            margin-left: auto;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        /* Tier-specific colors */
+        .lt-tier {
+            color: #4fc3f7;
+            border: 1px solid #4fc3f7;
+        }
+        
+        .ht-tier {
+            color: #ff6b6b;
+            border: 1px solid #ff6b6b;
+        }
+        
+        .special-tier {
+            color: #ba68c8;
+            border: 1px solid #ba68c8;
+        }
+        
+        .no-tier {
+            color: #aaa;
+            border: 1px solid #aaa;
+        }
+        
+        .tier-5 {
+            color: #4db6ac;
+            border: 1px solid #4db6ac;
+        }
+        
+        /* Tier card colors */
+        .lt-card .tier-icon {
+            background: rgba(79, 195, 247, 0.2);
+            color: #4fc3f7;
+        }
+        
+        .ht-card .tier-icon {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+        }
+        
+        .special-card .tier-icon {
+            background: rgba(186, 104, 200, 0.2);
+            color: #ba68c8;
+        }
+        
+        .creator-card .tier-icon {
+            background: rgba(255, 204, 0, 0.2);
+            color: #ffcc00;
+        }
+        
+        .tier5-card .tier-icon {
+            background: rgba(77, 182, 172, 0.2);
+            color: #4db6ac;
+        }
+        
+        .footer-note {
+            text-align: center;
+            margin-top: 50px;
+            color: #888;
+            font-size: 0.9rem;
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glowing-text {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+            }
+            to {
+                text-shadow: 0 0 15px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 204, 0, 0.5);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .tiers-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tier-card {
+                width: 100%;
+                max-width: 400px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="glowing-text">MCTiers Asia</h1>
+            <div class="subtitle">Competitive Player Rankings from Asia Region</div>
+            <div class="asia-badge">
+                <i class="fas fa-globe-asia"></i> All Players from Asia
+            </div>
+        </header>
+        
+        <div class="tiers-container">
+            <!-- Special Tier Card -->
+            <div class="tier-card special-card">
+                <div class="tier-header">
+                    <div class="tier-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div>
+                        <div class="tier-title">Special Tier</div>
+                        <div class="tier-description">Elite category with unique status</div>
+                    </div>
+                </div>
+                <ul class="player-list">
+                    <li class="player-item">
+                        <div class="player-avatar">M</div>
+                        <div class="player-name">Mch1t1</div>
+                        <div class="player-tier special-tier">Special</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- High Tier Card -->
+            <div class="tier-card ht-card">
+                <div class="tier-header">
+                    <div class="tier-icon">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div>
+                        <div class="tier-title">High Tier</div>
+                        <div class="tier-description">Top tier players with exceptional skills</div>
+                    </div>
+                </div>
+                <ul class="player-list">
+                    <li class="player-item">
+                        <div class="player-avatar">S</div>
+                        <div class="player-name">Sols</div>
+                        <div class="player-tier ht-tier">Ht1</div>
+                    </li>
+                    <li class="player-item">
+                        <div class="player-avatar">0</div>
+                        <div class="player-name">0zexy</div>
+                        <div class="player-tier ht-tier">Ht2</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Low Tier Card -->
+            <div class="tier-card lt-card">
+                <div class="tier-header">
+                    <div class="tier-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div>
+                        <div class="tier-title">Low Tier</div>
+                        <div class="tier-description">Skilled players with great potential</div>
+                    </div>
+                </div>
+                <ul class="player-list">
+                    <li class="player-item">
+                        <div class="player-avatar">D</div>
+                        <div class="player-name">Da9h</div>
+                        <div class="player-tier lt-tier">Lt10</div>
+                    </li>
+                    <li class="player-item">
+                        <div class="player-avatar">T</div>
+                        <div class="player-name">Timeplot</div>
+                        <div class="player-tier lt-tier">Lt2</div>
+                    </li>
+                    <li class="player-item">
+                        <div class="player-avatar">R</div>
+                        <div class="player-name">Rizzinmyveins</div>
+                        <div class="player-tier lt-tier">Lt1</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Creator & Tier 5 Card -->
+            <div class="tier-card creator-card">
+                <div class="tier-header">
+                    <div class="tier-icon">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
+                    <div>
+                        <div class="tier-title">Creator & Tier 5</div>
+                        <div class="tier-description">Website creator and tier 5 players</div>
+                    </div>
+                </div>
+                <ul class="player-list">
+                    <li class="player-item">
+                        <div class="player-avatar">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="player-name">pixelronaldo (Creator)</div>
+                        <div class="player-tier no-tier">No Tier</div>
+                    </li>
+                    <li class="player-item">
+                        <div class="player-avatar">I</div>
+                        <div class="player-name">IAM_BD_GAMER</div>
+                        <div class="player-tier tier-5">Tier 5</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-note">
+            <p><i class="fas fa-info-circle"></i> Rankings are based on competitive performance and are regularly updated</p>
+            <p>All players are from the Asia region • Last updated: Today</p>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactive effects to the player cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const playerItems = document.querySelectorAll('.player-item');
+            
+            playerItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.03)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+            
+            // Add a subtle animation to the tier cards on load
+            const tierCards = document.querySelectorAll('.tier-card');
+            tierCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.8s, transform 0.8s';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+            
+            // Make the title glow continuously
+            const title = document.querySelector('.glowing-text');
+            setInterval(() => {
+                title.classList.toggle('glowing-text');
+                setTimeout(() => {
+                    title.classList.toggle('glowing-text');
+                }, 100);
+            }, 4000);
+        });
+    </script>
+</body>
+</html>
